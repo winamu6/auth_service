@@ -101,7 +101,7 @@ docker-compose up --build
 
 *    Обновить БД: docker compose exec auth-service alembic upgrade head
 
-🔗 Связанные проекты
+## 🔗 Связанные проекты
 
 *    [Main Backend: Customer Service RMH - Backend](https://github.com/winamu6/customer_service_RMH) — основной потребитель сервиса (FastAPI).
 
