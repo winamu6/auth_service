@@ -1,6 +1,9 @@
+from google.protobuf import empty_pb2 as _empty_pb2
+from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Optional as _Optional
+from collections.abc import Iterable as _Iterable, Mapping as _Mapping
+from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -48,10 +51,44 @@ class CreateUserRequest(_message.Message):
     role: str
     def __init__(self, login: _Optional[str] = ..., password: _Optional[str] = ..., role: _Optional[str] = ...) -> None: ...
 
+class UpdateUserRequest(_message.Message):
+    __slots__ = ("id", "password", "role", "is_active")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    PASSWORD_FIELD_NUMBER: _ClassVar[int]
+    ROLE_FIELD_NUMBER: _ClassVar[int]
+    IS_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    id: int
+    password: str
+    role: str
+    is_active: bool
+    def __init__(self, id: _Optional[int] = ..., password: _Optional[str] = ..., role: _Optional[str] = ..., is_active: bool = ...) -> None: ...
+
+class DeleteUserRequest(_message.Message):
+    __slots__ = ("id",)
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: int
+    def __init__(self, id: _Optional[int] = ...) -> None: ...
+
+class DeleteResponse(_message.Message):
+    __slots__ = ("result",)
+    RESULT_FIELD_NUMBER: _ClassVar[int]
+    result: bool
+    def __init__(self, result: bool = ...) -> None: ...
+
+class UserListResponse(_message.Message):
+    __slots__ = ("users",)
+    USERS_FIELD_NUMBER: _ClassVar[int]
+    users: _containers.RepeatedCompositeFieldContainer[UserResponse]
+    def __init__(self, users: _Optional[_Iterable[_Union[UserResponse, _Mapping]]] = ...) -> None: ...
+
 class UserResponse(_message.Message):
-    __slots__ = ("id", "login")
+    __slots__ = ("id", "login", "role", "is_active")
     ID_FIELD_NUMBER: _ClassVar[int]
     LOGIN_FIELD_NUMBER: _ClassVar[int]
+    ROLE_FIELD_NUMBER: _ClassVar[int]
+    IS_ACTIVE_FIELD_NUMBER: _ClassVar[int]
     id: int
     login: str
-    def __init__(self, id: _Optional[int] = ..., login: _Optional[str] = ...) -> None: ...
+    role: str
+    is_active: bool
+    def __init__(self, id: _Optional[int] = ..., login: _Optional[str] = ..., role: _Optional[str] = ..., is_active: bool = ...) -> None: ...

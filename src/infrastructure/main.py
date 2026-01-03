@@ -5,6 +5,7 @@ import grpc
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
+from src.infrastructure import wait_for_db
 from src.infrastructure.repository import SQLAlchemyUserRepository
 from src.application.services.user_services import UserService
 from src.application.services.auth_service import AuthService
@@ -14,7 +15,9 @@ from src.infrastructure.config.settings import settings
 
 
 async def serve():
-    engine = create_async_engine(settings.DATABASE_URL)
+    await wait_for_db()
+
+    engine = create_async_engine(settings.DATABASE_URL_psycopg)
     async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
     server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
@@ -28,7 +31,7 @@ async def serve():
             AuthServicer(auth_service, user_service), server
         )
 
-        listen_addr = "[::]:50051"
+        listen_addr = f"[::]:50051"
         server.add_insecure_port(listen_addr)
         print(f"gRPC сервер запущен на {listen_addr}")
 

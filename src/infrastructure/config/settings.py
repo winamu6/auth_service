@@ -2,17 +2,21 @@ from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    # PostgreSQL
-    DB_HOST: str
-    DB_PORT: int
+    # db settings
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
+    DB_PORT: int
+    DB_HOST: str
 
-    # App config
-    APP_HOST: str
-    APP_PORT: int
-    CORS_ORIGINS: str
+    # JWT
+    JWT_SECRET_KEY: str
+    JWT_ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+
+    # admin settings
+    ADMIN_LOGIN: str
+    ADMIN_PASSWORD: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

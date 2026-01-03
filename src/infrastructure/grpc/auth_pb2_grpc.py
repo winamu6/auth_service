@@ -3,7 +3,8 @@
 import grpc
 import warnings
 
-import auth_pb2 as auth__pb2
+from src.infrastructure.grpc import auth_pb2 as auth__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
@@ -49,6 +50,21 @@ class AuthNavigationStub(object):
                 request_serializer=auth__pb2.CreateUserRequest.SerializeToString,
                 response_deserializer=auth__pb2.UserResponse.FromString,
                 _registered_method=True)
+        self.UpdateUser = channel.unary_unary(
+                '/auth.AuthNavigation/UpdateUser',
+                request_serializer=auth__pb2.UpdateUserRequest.SerializeToString,
+                response_deserializer=auth__pb2.UserResponse.FromString,
+                _registered_method=True)
+        self.DeleteUser = channel.unary_unary(
+                '/auth.AuthNavigation/DeleteUser',
+                request_serializer=auth__pb2.DeleteUserRequest.SerializeToString,
+                response_deserializer=auth__pb2.DeleteResponse.FromString,
+                _registered_method=True)
+        self.ListUsers = channel.unary_unary(
+                '/auth.AuthNavigation/ListUsers',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=auth__pb2.UserListResponse.FromString,
+                _registered_method=True)
 
 
 class AuthNavigationServicer(object):
@@ -72,6 +88,24 @@ class AuthNavigationServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def UpdateUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteUser(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListUsers(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AuthNavigationServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -89,6 +123,21 @@ def add_AuthNavigationServicer_to_server(servicer, server):
                     servicer.CreateUser,
                     request_deserializer=auth__pb2.CreateUserRequest.FromString,
                     response_serializer=auth__pb2.UserResponse.SerializeToString,
+            ),
+            'UpdateUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateUser,
+                    request_deserializer=auth__pb2.UpdateUserRequest.FromString,
+                    response_serializer=auth__pb2.UserResponse.SerializeToString,
+            ),
+            'DeleteUser': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteUser,
+                    request_deserializer=auth__pb2.DeleteUserRequest.FromString,
+                    response_serializer=auth__pb2.DeleteResponse.SerializeToString,
+            ),
+            'ListUsers': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListUsers,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=auth__pb2.UserListResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -172,6 +221,87 @@ class AuthNavigation(object):
             '/auth.AuthNavigation/CreateUser',
             auth__pb2.CreateUserRequest.SerializeToString,
             auth__pb2.UserResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdateUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.AuthNavigation/UpdateUser',
+            auth__pb2.UpdateUserRequest.SerializeToString,
+            auth__pb2.UserResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteUser(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.AuthNavigation/DeleteUser',
+            auth__pb2.DeleteUserRequest.SerializeToString,
+            auth__pb2.DeleteResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListUsers(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.AuthNavigation/ListUsers',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            auth__pb2.UserListResponse.FromString,
             options,
             channel_credentials,
             insecure,

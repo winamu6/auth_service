@@ -1,0 +1,51 @@
+services:
+  auth-db:
+    image: postgres:15-alpine
+    container_name: auth-db
+    environment:
+      POSTGRES_USER: ${AUTH_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASS:-1331}
+      POSTGRES_DB: ${AUTH_DB_NAME:-auth_db}
+    ports:
+      - "${AUTH_DB_PORT:-5433}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_USER:-postgres} -d ${AUTH_DB_NAME:-auth_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - shared-network
+
+  auth-service:
+    build: .
+    container_name: auth-service
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    environment:
+      DB_USER: ${AUTH_DB_USER}
+      DB_PASS: ${AUTH_DB_PASS}
+      DB_NAME: ${AUTH_DB_NAME}
+      DB_HOST: ${AUTH_DB_HOST}
+      DB_PORT: 5432
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      JWT_ALGORITHM: ${JWT_ALGORITHM}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+      ADMIN_LOGIN: ${ADMIN_LOGIN}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    command: >
+      sh -c "
+      if [ -z \"$$(ls -A alembic/versions)\" ]; then
+        echo 'No migrations found, generating initial migration...'
+        alembic revision --autogenerate -m 'Initial migration'
+      fi &&
+      alembic upgrade head && 
+      python src/infrastructure/db/init_admin.py && 
+      python src/infrastructure/main.py"
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    name: microservices_network
+    driver: bridge

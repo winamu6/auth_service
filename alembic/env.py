@@ -9,7 +9,7 @@ from src.infrastructure.db.model.user_model import Base
 
 config = context.config
 
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL_psycopg)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -39,7 +39,7 @@ def do_run_migrations(connection):
 
 async def run_migrations_online() -> None:
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = settings.DATABASE_URL
+    configuration["sqlalchemy.url"] = settings.DATABASE_URL_psycopg
 
     connectable = async_engine_from_config(
         configuration,

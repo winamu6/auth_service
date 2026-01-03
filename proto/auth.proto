@@ -2,10 +2,15 @@ syntax = "proto3";
 
 package auth;
 
+import "google/protobuf/empty.proto";
+
 service AuthNavigation {
   rpc Login (LoginRequest) returns (TokenResponse);
   rpc ValidateToken (ValidateRequest) returns (ValidateResponse);
   rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteResponse);
+  rpc ListUsers (google.protobuf.Empty) returns (UserListResponse);
 }
 
 message LoginRequest {
@@ -35,7 +40,28 @@ message CreateUserRequest {
   string role = 3;
 }
 
+message UpdateUserRequest {
+  int32 id = 1;
+  optional string password = 2;
+  optional string role = 3;
+  optional bool is_active = 4;
+}
+
+message DeleteUserRequest {
+  int32 id = 1;
+}
+
+message DeleteResponse {
+  bool result = 1;
+}
+
+message UserListResponse {
+  repeated UserResponse users = 1;
+}
+
 message UserResponse {
   int32 id = 1;
   string login = 2;
+  string role = 3;
+  bool is_active = 4;
 }
