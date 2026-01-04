@@ -4,24 +4,34 @@ from typing import Optional
 from enum import Enum
 
 class UserRole(str, Enum):
-    ADMIN = "admin"
-    USER = "user"
+    ADMIN = "ADMIN"
+    USER = "USER"
 
 class UserBase(BaseModel):
     login: str = Field(..., min_length=3, max_length=50)
     role: UserRole = UserRole.USER
 
+    model_config = ConfigDict(
+        from_attributes=True,
+        use_enum_values=True
+    )
+
+
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=8, description="Сырой пароль, который будет хешироваться")
+    password: str = Field(..., min_length=8, description="Сырой пароль")
+
 
 class UserUpdate(BaseModel):
+    password: Optional[str] = Field(None, min_length=8)
     role: Optional[UserRole] = None
     is_active: Optional[bool] = None
 
 class UserResponse(UserBase):
     id: int
     is_active: bool
-    created_at: datetime
+    created_at: Optional[datetime] = None
     last_login: Optional[datetime] = None
 
-    model_config = ConfigDict(from_attributes=True)
+UserCreate.model_rebuild()
+UserUpdate.model_rebuild()
+UserResponse.model_rebuild()

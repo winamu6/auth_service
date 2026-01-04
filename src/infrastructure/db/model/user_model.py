@@ -5,8 +5,8 @@ import enum
 
 
 class UserRole(enum.Enum):
-    ADMIN = "admin"
-    USER = "user"
+    ADMIN = "ADMIN"
+    USER = "USER"
 
 
 class Base(DeclarativeBase):
@@ -21,7 +21,11 @@ class User(Base):
 
     hashed_password = Column(String, nullable=False)
 
-    role = Column(Enum(UserRole), default=UserRole.USER, nullable=False)
+    role = Column(
+        Enum(UserRole, native_enum=False),
+        default=UserRole.USER, 
+        nullable=False
+    )
 
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
