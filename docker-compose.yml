@@ -3,13 +3,13 @@ services:
     image: postgres:15-alpine
     container_name: auth-db
     environment:
-      POSTGRES_USER: ${AUTH_DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${AUTH_DB_PASS:-1331}
-      POSTGRES_DB: ${AUTH_DB_NAME:-auth_db}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-1331}
+      POSTGRES_DB: ${DB_NAME:-auth_db}
     ports:
-      - "${AUTH_DB_PORT:-5433}:5432"
+      - "${DB_PORT:-5433}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${AUTH_DB_USER:-postgres} -d ${AUTH_DB_NAME:-auth_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-auth_db}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -23,10 +23,10 @@ services:
       auth-db:
         condition: service_healthy
     environment:
-      DB_USER: ${AUTH_DB_USER}
-      DB_PASS: ${AUTH_DB_PASS}
-      DB_NAME: ${AUTH_DB_NAME}
-      DB_HOST: ${AUTH_DB_HOST}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
       DB_PORT: 5432
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_ALGORITHM: ${JWT_ALGORITHM}
