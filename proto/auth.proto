@@ -6,10 +6,12 @@ import "google/protobuf/empty.proto";
 
 service AuthNavigation {
   rpc Login (LoginRequest) returns (TokenResponse);
+  rpc RefreshToken (RefreshRequest) returns (TokenResponse);
   rpc ValidateToken (ValidateRequest) returns (ValidateResponse);
   rpc CreateUser (CreateUserRequest) returns (UserResponse);
   rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
   rpc DeleteUser (DeleteUserRequest) returns (DeleteResponse);
+  rpc RevokeAccess (RevokeRequest) returns (DeleteResponse);
   rpc ListUsers (google.protobuf.Empty) returns (UserListResponse);
 }
 
@@ -18,9 +20,14 @@ message LoginRequest {
   string password = 2;
 }
 
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
 message TokenResponse {
   string access_token = 1;
-  string token_type = 2;
+  string refresh_token = 2;
+  string token_type = 3;
 }
 
 message ValidateRequest {
@@ -49,6 +56,10 @@ message UpdateUserRequest {
 
 message DeleteUserRequest {
   int32 id = 1;
+}
+
+message RevokeRequest {
+  int32 user_id = 1;
 }
 
 message DeleteResponse {

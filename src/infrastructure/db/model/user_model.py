@@ -32,5 +32,7 @@ class User(Base):
 
     last_login = Column(DateTime, nullable=True)
 
+    refresh_token = Column(String, nullable=True, index=True)
+
     def __repr__(self):
         return f"<User(login={self.login}, role={self.role})>"

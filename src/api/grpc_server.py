@@ -16,12 +16,34 @@ class AuthServicer(auth_pb2_grpc.AuthNavigationServicer):
         try:
             from src.domain.entities.login import LoginRequest
             login_data = LoginRequest(login=request.login, password=request.password)
-            token = await self.auth_service.authenticate_user(login_data)
-            return auth_pb2.TokenResponse(access_token=token.access_token, token_type=token.token_type)
+
+            tokens = await self.auth_service.authenticate_user(login_data)
+
+            return auth_pb2.TokenResponse(
+                access_token=tokens.access_token,
+                refresh_token=tokens.refresh_token,  # Добавлено
+                token_type=tokens.token_type
+            )
         except Exception as e:
             logger.error(f"Login failed: {e}")
             context.set_code(grpc.StatusCode.UNAUTHENTICATED)
             context.set_details("Invalid credentials")
+            return auth_pb2.TokenResponse()
+
+    async def RefreshToken(self, request, context):
+        logger.info("gRPC Call: RefreshToken")
+        try:
+            tokens = await self.auth_service.refresh_access_token(request.refresh_token)
+
+            return auth_pb2.TokenResponse(
+                access_token=tokens.access_token,
+                refresh_token=tokens.refresh_token,
+                token_type=tokens.token_type
+            )
+        except Exception as e:
+            logger.error(f"Refresh failed: {e}")
+            context.set_code(grpc.StatusCode.UNAUTHENTICATED)
+            context.set_details(str(e))
             return auth_pb2.TokenResponse()
 
     async def ValidateToken(self, request, context):
@@ -95,6 +117,16 @@ class AuthServicer(auth_pb2_grpc.AuthNavigationServicer):
             return auth_pb2.DeleteResponse(result=success)
         except Exception as e:
             logger.error(f"DeleteUser failed: {e}")
+            context.set_code(grpc.StatusCode.INTERNAL)
+            return auth_pb2.DeleteResponse(result=False)
+
+    async def RevokeAccess(self, request, context):
+        logger.info(f"gRPC Call: RevokeAccess | Target User ID: {request.user_id}")
+        try:
+            success = await self.auth_service.logout_user(request.user_id)
+            return auth_pb2.DeleteResponse(result=success)
+        except Exception as e:
+            logger.error(f"RevokeAccess failed: {e}")
             context.set_code(grpc.StatusCode.INTERNAL)
             return auth_pb2.DeleteResponse(result=False)
 

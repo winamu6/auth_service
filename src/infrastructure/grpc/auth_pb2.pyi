@@ -15,13 +15,21 @@ class LoginRequest(_message.Message):
     password: str
     def __init__(self, login: _Optional[str] = ..., password: _Optional[str] = ...) -> None: ...
 
+class RefreshRequest(_message.Message):
+    __slots__ = ("refresh_token",)
+    REFRESH_TOKEN_FIELD_NUMBER: _ClassVar[int]
+    refresh_token: str
+    def __init__(self, refresh_token: _Optional[str] = ...) -> None: ...
+
 class TokenResponse(_message.Message):
-    __slots__ = ("access_token", "token_type")
+    __slots__ = ("access_token", "refresh_token", "token_type")
     ACCESS_TOKEN_FIELD_NUMBER: _ClassVar[int]
+    REFRESH_TOKEN_FIELD_NUMBER: _ClassVar[int]
     TOKEN_TYPE_FIELD_NUMBER: _ClassVar[int]
     access_token: str
+    refresh_token: str
     token_type: str
-    def __init__(self, access_token: _Optional[str] = ..., token_type: _Optional[str] = ...) -> None: ...
+    def __init__(self, access_token: _Optional[str] = ..., refresh_token: _Optional[str] = ..., token_type: _Optional[str] = ...) -> None: ...
 
 class ValidateRequest(_message.Message):
     __slots__ = ("token",)
@@ -68,6 +76,12 @@ class DeleteUserRequest(_message.Message):
     ID_FIELD_NUMBER: _ClassVar[int]
     id: int
     def __init__(self, id: _Optional[int] = ...) -> None: ...
+
+class RevokeRequest(_message.Message):
+    __slots__ = ("user_id",)
+    USER_ID_FIELD_NUMBER: _ClassVar[int]
+    user_id: int
+    def __init__(self, user_id: _Optional[int] = ...) -> None: ...
 
 class DeleteResponse(_message.Message):
     __slots__ = ("result",)

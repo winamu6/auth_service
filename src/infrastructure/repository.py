@@ -61,6 +61,20 @@ class SQLAlchemyUserRepository(AbstractRepository[SAUser]):
             logger.error(f"Ошибка при merge пользователя ID {entity.id}: {e}")
             raise
 
+    async def update_refresh_token(self, user_id: int, token: Optional[str]) -> None:
+        logger.info(f"Обновление refresh токена для пользователя ID: {user_id}")
+        try:
+            stmt = (
+                update(SAUser)
+                .where(SAUser.id == user_id)
+                .values(refresh_token=token)
+            )
+            await self.session.execute(stmt)
+            await self.session.flush()
+        except Exception as e:
+            logger.error(f"Ошибка при обновлении refresh токена ID {user_id}: {e}")
+            raise
+
     async def delete(self, entity_id: int) -> bool:
         logger.warning(f"Выполнение Soft Delete для ID: {entity_id}")
         try:
@@ -73,4 +87,19 @@ class SQLAlchemyUserRepository(AbstractRepository[SAUser]):
             return result.rowcount > 0
         except Exception as e:
             logger.error(f"Ошибка при soft delete ID {entity_id}: {e}")
+            raise
+
+    async def revoke_user_tokens(self, user_id: int) -> bool:
+        logger.warning(f"Админ-панель: отзыв токенов для пользователя ID: {user_id}")
+        try:
+            stmt = (
+                update(SAUser)
+                .where(SAUser.id == user_id)
+                .values(refresh_token=None)  # Стираем токен
+            )
+            result = await self.session.execute(stmt)
+            await self.session.flush()
+            return result.rowcount > 0
+        except Exception as e:
+            logger.error(f"Ошибка при отзыве токена для ID {user_id}: {e}")
             raise

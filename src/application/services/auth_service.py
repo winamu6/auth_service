@@ -15,59 +15,86 @@ class AuthService:
     def __init__(self, user_repo):
         self.repo = user_repo
 
-    async def authenticate_user(self, login_data: LoginRequest) -> Optional[Token]:
+    async def authenticate_user(self, login_data: LoginRequest) -> Token:
         logger.info(f"Запрос на аутентификацию: login='{login_data.login}'")
 
-        try:
-            user = await self.repo.get_by_login(login_data.login)
+        user = await self.repo.get_by_login(login_data.login)
 
-            if not user:
-                logger.warning(f"Аутентификация провалена: пользователь '{login_data.login}' не существует")
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Неверный логин или пароль"
-                )
-
-            if not PasswordHelper.verify_password(login_data.password, user.hashed_password):
-                logger.warning(f"Аутентификация провалена: неверный пароль для '{login_data.login}'")
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Неверный логин или пароль"
-                )
-
-            access_token = self.create_access_token(
-                data={"sub": user.login, "role": user.role.value, "user_id": user.id}
-            )
-
-            logger.info(f"Успешный вход: user_id={user.id}, login='{user.login}'")
-            return Token(access_token=access_token, token_type="bearer")
-
-        except HTTPException:
-            raise
-        except Exception as e:
-            logger.error(f"Критическая ошибка при аутентификации '{login_data.login}': {e}", exc_info=True)
+        if not user or not PasswordHelper.verify_password(login_data.password, user.hashed_password):
+            logger.warning(f"Провал аутентификации для '{login_data.login}'")
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Внутренняя ошибка сервера"
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Неверный логин или пароль"
             )
 
-    def create_access_token(self, data: dict) -> str:
-        logger.debug(f"Генерация JWT токена для: {data.get('sub')}")
-        to_encode = data.copy()
-        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        return await self._create_token_pair(user)
 
-        to_encode.update({"exp": expire})
-
+    async def refresh_access_token(self, refresh_token: str) -> Token:
         try:
-            encoded_jwt = jwt.encode(
-                to_encode,
+            payload = jwt.decode(
+                refresh_token,
                 settings.JWT_SECRET_KEY,
-                algorithm=settings.JWT_ALGORITHM
+                algorithms=[settings.JWT_ALGORITHM]
             )
-            return encoded_jwt
-        except Exception as e:
-            logger.error(f"Ошибка при кодировании JWT: {e}")
-            raise
+
+            if payload.get("type") != "refresh":
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token type")
+
+            user_login = payload.get("sub")
+            user = await self.repo.get_by_login(user_login)
+
+            if not user or user.refresh_token != refresh_token:
+                logger.warning(f"Попытка использования невалидного refresh токена для {user_login}")
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Refresh token is invalid or expired"
+                )
+
+            logger.info(f"Обновление сессии для пользователя: {user_login}")
+            return await self._create_token_pair(user)
+
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token expired")
+        except jwt.PyJWTError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+
+    async def _create_token_pair(self, user) -> Token:
+        access_token = self.create_token(
+            data={
+                "sub": user.login,
+                "role": user.role.value,
+                "user_id": user.id,
+                "type": "access"
+            },
+            expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        )
+
+        refresh_token = self.create_token(
+            data={
+                "sub": user.login,
+                "type": "refresh"
+            },
+            expires_delta=timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)
+        )
+
+        await self.repo.update_refresh_token(user.id, refresh_token)
+
+        return Token(
+            access_token=access_token,
+            refresh_token=refresh_token,
+            token_type="bearer"
+        )
+
+    def create_token(self, data: dict, expires_delta: timedelta) -> str:
+        to_encode = data.copy()
+        expire = datetime.now(timezone.utc) + expires_delta
+        to_encode.update({"exp": int(expire.timestamp())})
+
+        return jwt.encode(
+            to_encode,
+            settings.JWT_SECRET_KEY,
+            algorithm=settings.JWT_ALGORITHM
+        )
 
     async def validate_token(self, token: str) -> dict:
         try:
@@ -76,17 +103,18 @@ class AuthService:
                 settings.JWT_SECRET_KEY,
                 algorithms=[settings.JWT_ALGORITHM]
             )
-            logger.debug(f"Токен валидирован для пользователя: {payload.get('sub')}")
+            if payload.get("type") != "access":
+                raise jwt.PyJWTError()
+
             return payload
         except jwt.ExpiredSignatureError:
-            logger.warning("Попытка использования просроченного токена")
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token has expired"
-            )
-        except jwt.PyJWTError as e:
-            logger.warning(f"Ошибка валидации токена: {type(e).__name__}")
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials"
-            )
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
+        except jwt.PyJWTError:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
+
+    async def logout_user(self, user_id: int):
+        success = await self.repo.revoke_user_tokens(user_id)
+        if not success:
+            raise HTTPException(status_code=404, detail="Пользователь не найден")
+        logger.info(f"Сессия пользователя {user_id} успешно аннулирована.")
+        return True

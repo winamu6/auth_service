@@ -40,6 +40,11 @@ class AuthNavigationStub(object):
                 request_serializer=auth__pb2.LoginRequest.SerializeToString,
                 response_deserializer=auth__pb2.TokenResponse.FromString,
                 _registered_method=True)
+        self.RefreshToken = channel.unary_unary(
+                '/auth.AuthNavigation/RefreshToken',
+                request_serializer=auth__pb2.RefreshRequest.SerializeToString,
+                response_deserializer=auth__pb2.TokenResponse.FromString,
+                _registered_method=True)
         self.ValidateToken = channel.unary_unary(
                 '/auth.AuthNavigation/ValidateToken',
                 request_serializer=auth__pb2.ValidateRequest.SerializeToString,
@@ -60,6 +65,11 @@ class AuthNavigationStub(object):
                 request_serializer=auth__pb2.DeleteUserRequest.SerializeToString,
                 response_deserializer=auth__pb2.DeleteResponse.FromString,
                 _registered_method=True)
+        self.RevokeAccess = channel.unary_unary(
+                '/auth.AuthNavigation/RevokeAccess',
+                request_serializer=auth__pb2.RevokeRequest.SerializeToString,
+                response_deserializer=auth__pb2.DeleteResponse.FromString,
+                _registered_method=True)
         self.ListUsers = channel.unary_unary(
                 '/auth.AuthNavigation/ListUsers',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
@@ -71,6 +81,12 @@ class AuthNavigationServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def Login(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RefreshToken(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -100,6 +116,12 @@ class AuthNavigationServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def RevokeAccess(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListUsers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -112,6 +134,11 @@ def add_AuthNavigationServicer_to_server(servicer, server):
             'Login': grpc.unary_unary_rpc_method_handler(
                     servicer.Login,
                     request_deserializer=auth__pb2.LoginRequest.FromString,
+                    response_serializer=auth__pb2.TokenResponse.SerializeToString,
+            ),
+            'RefreshToken': grpc.unary_unary_rpc_method_handler(
+                    servicer.RefreshToken,
+                    request_deserializer=auth__pb2.RefreshRequest.FromString,
                     response_serializer=auth__pb2.TokenResponse.SerializeToString,
             ),
             'ValidateToken': grpc.unary_unary_rpc_method_handler(
@@ -132,6 +159,11 @@ def add_AuthNavigationServicer_to_server(servicer, server):
             'DeleteUser': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteUser,
                     request_deserializer=auth__pb2.DeleteUserRequest.FromString,
+                    response_serializer=auth__pb2.DeleteResponse.SerializeToString,
+            ),
+            'RevokeAccess': grpc.unary_unary_rpc_method_handler(
+                    servicer.RevokeAccess,
+                    request_deserializer=auth__pb2.RevokeRequest.FromString,
                     response_serializer=auth__pb2.DeleteResponse.SerializeToString,
             ),
             'ListUsers': grpc.unary_unary_rpc_method_handler(
@@ -166,6 +198,33 @@ class AuthNavigation(object):
             target,
             '/auth.AuthNavigation/Login',
             auth__pb2.LoginRequest.SerializeToString,
+            auth__pb2.TokenResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RefreshToken(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.AuthNavigation/RefreshToken',
+            auth__pb2.RefreshRequest.SerializeToString,
             auth__pb2.TokenResponse.FromString,
             options,
             channel_credentials,
@@ -274,6 +333,33 @@ class AuthNavigation(object):
             target,
             '/auth.AuthNavigation/DeleteUser',
             auth__pb2.DeleteUserRequest.SerializeToString,
+            auth__pb2.DeleteResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RevokeAccess(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/auth.AuthNavigation/RevokeAccess',
+            auth__pb2.RevokeRequest.SerializeToString,
             auth__pb2.DeleteResponse.FromString,
             options,
             channel_credentials,
