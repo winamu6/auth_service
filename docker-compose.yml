@@ -23,10 +23,10 @@ services:
       auth-db:
         condition: service_healthy
     environment:
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
-      DB_NAME: ${DB_NAME}
-      DB_HOST: ${DB_HOST}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASS: ${DB_PASS:-1331}
+      DB_NAME: ${DB_NAME:-auth_db}
+      DB_HOST: auth-db
       DB_PORT: 5432
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       JWT_ALGORITHM: ${JWT_ALGORITHM}
@@ -43,6 +43,41 @@ services:
       alembic upgrade head && 
       python src/infrastructure/db/init_admin.py && 
       python src/infrastructure/main.py"
+    networks:
+      - shared-network
+
+  test-db:
+    image: postgres:15-alpine
+    container_name: auth-test-db
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: auth_test_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d auth_test_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    networks:
+      - shared-network
+
+  test-runner:
+    build: .
+    container_name: auth-test-runner
+    depends_on:
+      test-db:
+        condition: service_healthy
+    environment:
+      DB_USER: test_user
+      DB_PASS: test_password
+      DB_NAME: auth_test_db
+      DB_HOST: test-db
+      DB_PORT: 5432
+      JWT_SECRET_KEY: "test_secret_key_change_me"
+      JWT_ALGORITHM: "HS256"
+      PYTHONPATH: .:/app/src
+    command: >
+      sh -c "pytest tests/ -v"
     networks:
       - shared-network
 
