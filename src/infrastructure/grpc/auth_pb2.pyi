@@ -38,38 +38,44 @@ class ValidateRequest(_message.Message):
     def __init__(self, token: _Optional[str] = ...) -> None: ...
 
 class ValidateResponse(_message.Message):
-    __slots__ = ("user_id", "login", "role", "is_valid")
+    __slots__ = ("user_id", "login", "role", "branch", "is_valid")
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     LOGIN_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
+    BRANCH_FIELD_NUMBER: _ClassVar[int]
     IS_VALID_FIELD_NUMBER: _ClassVar[int]
     user_id: int
     login: str
     role: str
+    branch: int
     is_valid: bool
-    def __init__(self, user_id: _Optional[int] = ..., login: _Optional[str] = ..., role: _Optional[str] = ..., is_valid: bool = ...) -> None: ...
+    def __init__(self, user_id: _Optional[int] = ..., login: _Optional[str] = ..., role: _Optional[str] = ..., branch: _Optional[int] = ..., is_valid: bool = ...) -> None: ...
 
 class CreateUserRequest(_message.Message):
-    __slots__ = ("login", "password", "role")
+    __slots__ = ("login", "password", "role", "branch")
     LOGIN_FIELD_NUMBER: _ClassVar[int]
     PASSWORD_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
+    BRANCH_FIELD_NUMBER: _ClassVar[int]
     login: str
     password: str
     role: str
-    def __init__(self, login: _Optional[str] = ..., password: _Optional[str] = ..., role: _Optional[str] = ...) -> None: ...
+    branch: int
+    def __init__(self, login: _Optional[str] = ..., password: _Optional[str] = ..., role: _Optional[str] = ..., branch: _Optional[int] = ...) -> None: ...
 
 class UpdateUserRequest(_message.Message):
-    __slots__ = ("id", "password", "role", "is_active")
+    __slots__ = ("id", "password", "role", "is_active", "branch")
     ID_FIELD_NUMBER: _ClassVar[int]
     PASSWORD_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     IS_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    BRANCH_FIELD_NUMBER: _ClassVar[int]
     id: int
     password: str
     role: str
     is_active: bool
-    def __init__(self, id: _Optional[int] = ..., password: _Optional[str] = ..., role: _Optional[str] = ..., is_active: bool = ...) -> None: ...
+    branch: int
+    def __init__(self, id: _Optional[int] = ..., password: _Optional[str] = ..., role: _Optional[str] = ..., is_active: bool = ..., branch: _Optional[int] = ...) -> None: ...
 
 class DeleteUserRequest(_message.Message):
     __slots__ = ("id",)
@@ -96,13 +102,15 @@ class UserListResponse(_message.Message):
     def __init__(self, users: _Optional[_Iterable[_Union[UserResponse, _Mapping]]] = ...) -> None: ...
 
 class UserResponse(_message.Message):
-    __slots__ = ("id", "login", "role", "is_active")
+    __slots__ = ("id", "login", "role", "is_active", "branch")
     ID_FIELD_NUMBER: _ClassVar[int]
     LOGIN_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     IS_ACTIVE_FIELD_NUMBER: _ClassVar[int]
+    BRANCH_FIELD_NUMBER: _ClassVar[int]
     id: int
     login: str
     role: str
     is_active: bool
-    def __init__(self, id: _Optional[int] = ..., login: _Optional[str] = ..., role: _Optional[str] = ..., is_active: bool = ...) -> None: ...
+    branch: int
+    def __init__(self, id: _Optional[int] = ..., login: _Optional[str] = ..., role: _Optional[str] = ..., is_active: bool = ..., branch: _Optional[int] = ...) -> None: ...

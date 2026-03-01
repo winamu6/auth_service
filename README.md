@@ -1,6 +1,6 @@
-# Customer Service RMH - Auth Service
+# Auth Service
 
-Микросервис авторизации и управления пользователями, работающий по протоколу gRPC. Обеспечивает безопасность всей системы RMH через механизмы JWT и ролевую модель доступа.
+Микросервис авторизации и управления пользователями, работающий по протоколу gRPC. Обеспечивает безопасность всей системы через механизмы JWT и ролевую модель доступа.
 
 ## 🏗 Архитектура и структура
 
@@ -108,10 +108,3 @@ docker compose exec auth-service pytest
 *    Создать миграцию: docker compose exec auth-service alembic revision --autogenerate -m "description"
 
 *    Применить: docker compose exec auth-service alembic upgrade head
-
-🔗 Связанные проекты
-## 🔗 Связанные проекты
-
-*    [Main Backend: Customer Service RMH - Backend](https://github.com/winamu6/customer_servic) — основной потребитель сервиса (FastAPI).
-
-*    [Frontend: Customer Service RMH - Client](https://github.com/winamu6/commerse-service-client) — интерфейс управления.

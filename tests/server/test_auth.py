@@ -19,6 +19,7 @@ class TestAuthService:
         mock_user.login = "test_user"
         mock_user.hashed_password = hashed
         mock_user.role.value = "user"
+        mock_user.branch = 123
 
         mock_repo.get_by_login.return_value = mock_user
         login_data = LoginRequest(login="test_user", password=password)
@@ -41,7 +42,7 @@ class TestAuthService:
         assert exc.value.status_code == 401
 
     async def test_validate_token_success(self, auth_service):
-        data = {"sub": "admin", "role": "admin", "user_id": 1, "type": "access"}
+        data = {"sub": "admin", "role": "admin", "user_id": 1, "branch": 1, "type": "access"}
         token = auth_service.create_token(data, timedelta(minutes=5))
 
         payload = await auth_service.validate_token(token)

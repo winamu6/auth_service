@@ -14,3 +14,4 @@ class TokenData(BaseModel):
     user_id: int
     login: str
     role: str
+    branch: int

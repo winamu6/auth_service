@@ -11,7 +11,8 @@ class TestUserService:
         user_data = UserCreate(
             login="new_guy",
             password="password123",
-            role=UserRole.USER
+            role=UserRole.USER,
+            branch=1
         )
         mock_repo.add.side_effect = lambda u: u
 

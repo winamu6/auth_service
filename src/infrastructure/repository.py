@@ -95,7 +95,7 @@ class SQLAlchemyUserRepository(AbstractRepository[SAUser]):
             stmt = (
                 update(SAUser)
                 .where(SAUser.id == user_id)
-                .values(refresh_token=None)  # Стираем токен
+                .values(refresh_token=None)
             )
             result = await self.session.execute(stmt)
             await self.session.flush()
@@ -103,3 +103,9 @@ class SQLAlchemyUserRepository(AbstractRepository[SAUser]):
         except Exception as e:
             logger.error(f"Ошибка при отзыве токена для ID {user_id}: {e}")
             raise
+
+    async def get_by_branch(self, branch: int) -> List[SAUser]:
+        logger.debug(f"Поиск пользователей филиала: {branch}")
+        stmt = select(SAUser).where(SAUser.branch == branch, SAUser.is_active == True)
+        result = await self.session.execute(stmt)
+        return list(result.scalars().all())

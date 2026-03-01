@@ -21,7 +21,7 @@ class AuthServicer(auth_pb2_grpc.AuthNavigationServicer):
 
             return auth_pb2.TokenResponse(
                 access_token=tokens.access_token,
-                refresh_token=tokens.refresh_token,  # Добавлено
+                refresh_token=tokens.refresh_token,
                 token_type=tokens.token_type
             )
         except Exception as e:
@@ -54,6 +54,7 @@ class AuthServicer(auth_pb2_grpc.AuthNavigationServicer):
                 user_id=payload["user_id"],
                 login=payload["sub"],
                 role=payload["role"],
+                branch=payload["branch"],
                 is_valid=True
             )
         except Exception as e:
@@ -67,13 +68,15 @@ class AuthServicer(auth_pb2_grpc.AuthNavigationServicer):
             user_data = UserCreate(
                 login=request.login,
                 password=request.password,
-                role=UserRole(role_val)
+                role=UserRole(role_val),
+                branch=request.branch
             )
             user = await self.user_service.create_user(user_data)
             return auth_pb2.UserResponse(
                 id=user.id,
                 login=user.login,
                 role=user.role.value,
+                branch=user.branch,
                 is_active=user.is_active
             )
         except Exception as e:
@@ -91,6 +94,8 @@ class AuthServicer(auth_pb2_grpc.AuthNavigationServicer):
                 update_fields["password"] = request.password
             if request.HasField('is_active'):
                 update_fields["is_active"] = request.is_active
+            if request.HasField('branch'):
+                update_fields["branch"] = request.branch
 
             update_data = UserUpdate(**update_fields)
             user = await self.user_service.update_user(request.id, update_data)
@@ -103,7 +108,8 @@ class AuthServicer(auth_pb2_grpc.AuthNavigationServicer):
                 id=user.id,
                 login=user.login,
                 role=user.role.value,
-                is_active=user.is_active
+                is_active=user.is_active,
+                branch=user.branch
             )
         except Exception as e:
             logger.error(f"UpdateUser failed: {e}")

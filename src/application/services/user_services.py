@@ -24,6 +24,7 @@ class UserService:
                 login=user_data.login,
                 hashed_password=hashed_pw,
                 role=user_data.role,
+                branch=user_data.branch,
                 is_active=True
             )
 

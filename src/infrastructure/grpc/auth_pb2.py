@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nauth.proto\x12\x04\x61uth\x1a\x1bgoogle/protobuf/empty.proto\"/\n\x0cLoginRequest\x12\r\n\x05login\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\'\n\x0eRefreshRequest\x12\x15\n\rrefresh_token\x18\x01 \x01(\t\"P\n\rTokenResponse\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\t\x12\x15\n\rrefresh_token\x18\x02 \x01(\t\x12\x12\n\ntoken_type\x18\x03 \x01(\t\" \n\x0fValidateRequest\x12\r\n\x05token\x18\x01 \x01(\t\"R\n\x10ValidateResponse\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\r\n\x05login\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\x12\x10\n\x08is_valid\x18\x04 \x01(\x08\"B\n\x11\x43reateUserRequest\x12\r\n\x05login\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\"\x85\x01\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x15\n\x08password\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x11\n\x04role\x18\x03 \x01(\tH\x01\x88\x01\x01\x12\x16\n\tis_active\x18\x04 \x01(\x08H\x02\x88\x01\x01\x42\x0b\n\t_passwordB\x07\n\x05_roleB\x0c\n\n_is_active\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\x05\" \n\rRevokeRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\" \n\x0e\x44\x65leteResponse\x12\x0e\n\x06result\x18\x01 \x01(\x08\"5\n\x10UserListResponse\x12!\n\x05users\x18\x01 \x03(\x0b\x32\x12.auth.UserResponse\"J\n\x0cUserResponse\x12\n\n\x02id\x18\x01 \x01(\x05\x12\r\n\x05login\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\x12\x11\n\tis_active\x18\x04 \x01(\x08\x32\xe8\x03\n\x0e\x41uthNavigation\x12\x30\n\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.TokenResponse\x12\x39\n\x0cRefreshToken\x12\x14.auth.RefreshRequest\x1a\x13.auth.TokenResponse\x12>\n\rValidateToken\x12\x15.auth.ValidateRequest\x1a\x16.auth.ValidateResponse\x12\x39\n\nCreateUser\x12\x17.auth.CreateUserRequest\x1a\x12.auth.UserResponse\x12\x39\n\nUpdateUser\x12\x17.auth.UpdateUserRequest\x1a\x12.auth.UserResponse\x12;\n\nDeleteUser\x12\x17.auth.DeleteUserRequest\x1a\x14.auth.DeleteResponse\x12\x39\n\x0cRevokeAccess\x12\x13.auth.RevokeRequest\x1a\x14.auth.DeleteResponse\x12;\n\tListUsers\x12\x16.google.protobuf.Empty\x1a\x16.auth.UserListResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nauth.proto\x12\x04\x61uth\x1a\x1bgoogle/protobuf/empty.proto\"/\n\x0cLoginRequest\x12\r\n\x05login\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\"\'\n\x0eRefreshRequest\x12\x15\n\rrefresh_token\x18\x01 \x01(\t\"P\n\rTokenResponse\x12\x14\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\t\x12\x15\n\rrefresh_token\x18\x02 \x01(\t\x12\x12\n\ntoken_type\x18\x03 \x01(\t\" \n\x0fValidateRequest\x12\r\n\x05token\x18\x01 \x01(\t\"b\n\x10ValidateResponse\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\x12\r\n\x05login\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\x12\x0e\n\x06\x62ranch\x18\x04 \x01(\x05\x12\x10\n\x08is_valid\x18\x05 \x01(\x08\"R\n\x11\x43reateUserRequest\x12\r\n\x05login\x18\x01 \x01(\t\x12\x10\n\x08password\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\x12\x0e\n\x06\x62ranch\x18\x04 \x01(\x05\"\xa5\x01\n\x11UpdateUserRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x15\n\x08password\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x11\n\x04role\x18\x03 \x01(\tH\x01\x88\x01\x01\x12\x16\n\tis_active\x18\x04 \x01(\x08H\x02\x88\x01\x01\x12\x13\n\x06\x62ranch\x18\x05 \x01(\x05H\x03\x88\x01\x01\x42\x0b\n\t_passwordB\x07\n\x05_roleB\x0c\n\n_is_activeB\t\n\x07_branch\"\x1f\n\x11\x44\x65leteUserRequest\x12\n\n\x02id\x18\x01 \x01(\x05\" \n\rRevokeRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\x05\" \n\x0e\x44\x65leteResponse\x12\x0e\n\x06result\x18\x01 \x01(\x08\"5\n\x10UserListResponse\x12!\n\x05users\x18\x01 \x03(\x0b\x32\x12.auth.UserResponse\"Z\n\x0cUserResponse\x12\n\n\x02id\x18\x01 \x01(\x05\x12\r\n\x05login\x18\x02 \x01(\t\x12\x0c\n\x04role\x18\x03 \x01(\t\x12\x11\n\tis_active\x18\x04 \x01(\x08\x12\x0e\n\x06\x62ranch\x18\x05 \x01(\x05\x32\xe8\x03\n\x0e\x41uthNavigation\x12\x30\n\x05Login\x12\x12.auth.LoginRequest\x1a\x13.auth.TokenResponse\x12\x39\n\x0cRefreshToken\x12\x14.auth.RefreshRequest\x1a\x13.auth.TokenResponse\x12>\n\rValidateToken\x12\x15.auth.ValidateRequest\x1a\x16.auth.ValidateResponse\x12\x39\n\nCreateUser\x12\x17.auth.CreateUserRequest\x1a\x12.auth.UserResponse\x12\x39\n\nUpdateUser\x12\x17.auth.UpdateUserRequest\x1a\x12.auth.UserResponse\x12;\n\nDeleteUser\x12\x17.auth.DeleteUserRequest\x1a\x14.auth.DeleteResponse\x12\x39\n\x0cRevokeAccess\x12\x13.auth.RevokeRequest\x1a\x14.auth.DeleteResponse\x12;\n\tListUsers\x12\x16.google.protobuf.Empty\x1a\x16.auth.UserListResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,21 +41,21 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_VALIDATEREQUEST']._serialized_start=221
   _globals['_VALIDATEREQUEST']._serialized_end=253
   _globals['_VALIDATERESPONSE']._serialized_start=255
-  _globals['_VALIDATERESPONSE']._serialized_end=337
-  _globals['_CREATEUSERREQUEST']._serialized_start=339
-  _globals['_CREATEUSERREQUEST']._serialized_end=405
-  _globals['_UPDATEUSERREQUEST']._serialized_start=408
-  _globals['_UPDATEUSERREQUEST']._serialized_end=541
-  _globals['_DELETEUSERREQUEST']._serialized_start=543
-  _globals['_DELETEUSERREQUEST']._serialized_end=574
-  _globals['_REVOKEREQUEST']._serialized_start=576
-  _globals['_REVOKEREQUEST']._serialized_end=608
-  _globals['_DELETERESPONSE']._serialized_start=610
-  _globals['_DELETERESPONSE']._serialized_end=642
-  _globals['_USERLISTRESPONSE']._serialized_start=644
-  _globals['_USERLISTRESPONSE']._serialized_end=697
-  _globals['_USERRESPONSE']._serialized_start=699
-  _globals['_USERRESPONSE']._serialized_end=773
-  _globals['_AUTHNAVIGATION']._serialized_start=776
-  _globals['_AUTHNAVIGATION']._serialized_end=1264
+  _globals['_VALIDATERESPONSE']._serialized_end=353
+  _globals['_CREATEUSERREQUEST']._serialized_start=355
+  _globals['_CREATEUSERREQUEST']._serialized_end=437
+  _globals['_UPDATEUSERREQUEST']._serialized_start=440
+  _globals['_UPDATEUSERREQUEST']._serialized_end=605
+  _globals['_DELETEUSERREQUEST']._serialized_start=607
+  _globals['_DELETEUSERREQUEST']._serialized_end=638
+  _globals['_REVOKEREQUEST']._serialized_start=640
+  _globals['_REVOKEREQUEST']._serialized_end=672
+  _globals['_DELETERESPONSE']._serialized_start=674
+  _globals['_DELETERESPONSE']._serialized_end=706
+  _globals['_USERLISTRESPONSE']._serialized_start=708
+  _globals['_USERLISTRESPONSE']._serialized_end=761
+  _globals['_USERRESPONSE']._serialized_start=763
+  _globals['_USERRESPONSE']._serialized_end=853
+  _globals['_AUTHNAVIGATION']._serialized_start=856
+  _globals['_AUTHNAVIGATION']._serialized_end=1344
 # @@protoc_insertion_point(module_scope)

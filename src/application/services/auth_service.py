@@ -64,6 +64,7 @@ class AuthService:
                 "sub": user.login,
                 "role": user.role.value,
                 "user_id": user.id,
+                "branch": user.branch,
                 "type": "access"
             },
             expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)

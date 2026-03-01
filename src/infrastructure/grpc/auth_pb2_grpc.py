@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import src.infrastructure.grpc.auth_pb2 as auth__pb2
+import auth_pb2 as auth__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 GRPC_GENERATED_VERSION = '1.76.0'

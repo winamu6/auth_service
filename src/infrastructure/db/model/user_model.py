@@ -26,7 +26,7 @@ class User(Base):
         default=UserRole.USER, 
         nullable=False
     )
-
+    branch = Column(Integer, nullable=False)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 

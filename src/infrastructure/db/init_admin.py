@@ -21,6 +21,7 @@ async def create_admin():
                 login=settings.ADMIN_LOGIN,
                 hashed_password=PasswordHelper.hash_password(settings.ADMIN_PASSWORD),
                 role=UserRole.ADMIN,
+                branch=1,
                 is_active=True
             )
             session.add(new_admin)

@@ -1,9 +1,9 @@
 import pytest
 import asyncio
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
-from src.application import UserService
-from src.application import AuthService
+from src.application.services.user_services import UserService
+from src.application.services.auth_service import AuthService
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -27,5 +27,4 @@ def user_service(mock_repo):
 
 @pytest.fixture
 def mock_grpc_context():
-    context = AsyncMock()
-    return context
+    return AsyncMock()
